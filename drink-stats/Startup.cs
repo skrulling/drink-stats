@@ -21,11 +21,10 @@ namespace drink_stats
                 config.CreateMap<Drink, GetDrinkResponse>();
                 config.CreateMap<CreateDrinkRequest, Drink>();
             });
-            //services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
             services.AddMediatR(typeof(Startup).Assembly);
             services.AddSwaggerGen();
             services.AddDbContext<DrinkStatDbContext>(
-                options => options.UseInMemoryDatabase("test"));
+                options => options.UseInMemoryDatabase("testdb"));
         }
 
         public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
