@@ -59,6 +59,30 @@ namespace tests.drink_stats
         }
 
         [Test]
+        public async Task Drink_with_more_than_one_houndred_percent_will_fail()
+        {
+            using (var server = CreateTestServer())
+            {
+                var client = server.CreateClient();
+
+                var resp = await client.PostAsJsonAsync(
+                    DrinkUrl, new
+                    {
+                        Name = "Vodka",
+                        Percentage = 150,
+                        VolumeInMillilitres = 500
+                    });
+
+                Assert.That(resp.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+
+                var contentJson = await resp.Content.ReadFromJsonAsync<ValidationProblemDetails>();
+                Assert.That(contentJson, Is.Not.Null);
+                Assert.That(contentJson.Errors.ContainsKey("Percentage"), Is.True);
+            }
+        }
+
+
+        [Test]
         public async Task Create_drink_correct_request_returns_ok_with_id()
         {
             using (var server = CreateTestServer())
